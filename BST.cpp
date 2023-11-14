@@ -1,6 +1,6 @@
 #include "BST.h"
 
-Node::Node(Node* parent, char value) : parent(parent), value(value) {};
+Node::Node(Node* parent, char value) : parent(parent), value(value), left(nullptr), right(nullptr) {};
 
 Node::~Node() {
     if (parent) {
@@ -20,46 +20,35 @@ Node::~Node() {
 
 BST::BST() : root(nullptr) {}
 
-void BST::insert(char value)
-{
+
+void BST::insert(char value, Node* node) {
     if (!root) {
         root = new Node(nullptr, value);
+        cout << "Insert succes" << endl;
         return;
     }
 
-    Node* current_node = root;
-    Node* next_node;
+    if (value < node->value) {
+        if (node->left)
+            insert(value, node->left);
 
-    if (current_node->value > value)
-        next_node = root->left;
-    else
-        next_node = root->right;
-
-    while (next_node != nullptr) {
-        while (next_node != nullptr && next_node->value > value) {
-            current_node = next_node;
-            next_node = next_node->left;
-
-
+        else {
+            Node* new_node = new Node(node, value);
+            node->left = new_node;
+            cout << "Insert succes" << endl;
         }
-
-        if (next_node == nullptr) {
-            next_node = new Node(current_node, value);
-            current_node->left = next_node;
-            return;
-        }
-
-        current_node = next_node;
-        next_node = current_node->right;
     }
 
-    next_node = new Node(current_node, value);
-    if (current_node->value > value)
-        current_node->left = next_node;
-    else
-        current_node->right = next_node;
-    return;
+    else {
+        if (node->right)
+            insert(value, node->right);
 
+        else {
+            Node* new_node = new Node(node, value);
+            node->right = new_node;
+            cout << "Insert succes" << endl;
+        }
+    }
 }
 
 void BST::print(Node* node, bool isRight, string prefix)
@@ -81,33 +70,30 @@ void BST::print_tree() {
         print(root, false, "");
 }
 
-Node* BST::find(char value)
+Node* BST::find(char value, Node* node)
 {
-    Node* node = root;
-
-
-    while (true) {
-
-        if (!node || node->value == value)
-            break;
-
-        else if (node->value > value)
-            node = node->left;
-
-        else
-        {
-            if (!node->right)
-                break;
-
-            node = node->right;
-        }
-    }
-
-    if (!node || node->value < value && !node->right)
+    if (!node)
         return nullptr;
 
-    else if (node->value == value)
+    if (value == node->value) {
         return node;
+    }
+
+    if (value < node->value) {
+        if (node->left)
+            return find(value, node->left);
+
+        else
+            return nullptr;
+    }
+
+    else {
+        if (node->right)
+            return find(value, node->right);
+
+        else
+            return nullptr;
+    }
 
 }
 
@@ -147,7 +133,7 @@ void BST::get_distance(char value)
     return;
 }
 
-int BST::recur_distance(Node* node, long long counter) {
+int BST::recur_distance(Node* node, int counter) {
     if (node) {
         counter++;
         return max(recur_distance(node->left, counter), recur_distance(node->right, counter));
@@ -157,9 +143,9 @@ int BST::recur_distance(Node* node, long long counter) {
 
 
 
-void BST::which_is_higher(char value1, char value2)
+void BST::wich_is_higher(char value1, char value2)
 {
-    int tree1 = recur_distance(find(value1), 0), tree2 = recur_distance(find(value2), 0);
+    int tree1 = recur_distance(find(value1, root), 0), tree2 = recur_distance(find(value2, root), 0);
 
     if (tree1 > tree2)
         cout << "First tree is higher" << endl;
@@ -173,7 +159,7 @@ void BST::which_is_higher(char value1, char value2)
 
 void BST::delete_tree(char value)
 {
-    Node* node = find(value);
+    Node* node = find(value, root);
 
     if (node) {
         if (node == root)
@@ -187,13 +173,11 @@ void BST::delete_tree(char value)
         cout << "Node not found!" << endl;
 }
 
-void BST::generate_tree(long long num) {
+void BST::generate_tree(int num) {
     srand(time(0));
 
-    for (long long i = 0; i < num; i++) {
-        if (i % 100000 == 0)
-            cout << i << endl;
-        insert(to_string(rand() % 10)[0]);
+    for (int i = 0; i < num; i++) {
+        insert(to_string(rand() % 10)[0], root);
     }
 
 }
