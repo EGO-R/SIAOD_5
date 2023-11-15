@@ -8,4 +8,6 @@ add_executable(SIAOD_5 main.cpp
         BST.h
         BinaryFile.cpp
         BinaryFile.h
+        HashTable.cpp
+        HashTable.h
 )

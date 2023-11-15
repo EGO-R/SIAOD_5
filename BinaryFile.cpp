@@ -1,17 +1,22 @@
 #include "BinaryFile.h"
 
 
+char names[][64] = {"Матлог", "Информатика", "История", "Философия"};
+
 streampos BinaryFile::addRecordToFile(Discipline* discipline) {
-    ofstream file(filename, ios::binary | ios::ate);
-    if (!file) {
-        cout << "Error file opening!" << endl;
-        return -1;
+    std::fstream fs(filename, std::ios::binary | std::ios::app | std::ios::ate);
+
+    if (!fs.is_open()) {
+        throw std::runtime_error("Failed to open file");
     }
 
-    streampos position = file.tellp();
-    file.write(reinterpret_cast<const char*>(discipline), sizeof(Discipline));
-    cout << "Record succesfully added to file." << endl;
-    return position;
+    fs.write(reinterpret_cast<const char*>(discipline), sizeof(Discipline));
+
+    std::streampos currentPos = fs.tellp();
+
+    fs.close();
+
+    return currentPos;
 }
 
 
@@ -20,6 +25,7 @@ streampos BinaryFile::addRecordToFile(Discipline* discipline) {
 
 
 void BinaryFile::deleteRecordFromFile(streampos position) {
+    cout << position << endl << endl;
     fstream file(filename, ios::binary | ios::in | ios::out);
     if (!file) {
         cout << "Error file opening!" << endl;
@@ -36,12 +42,14 @@ void BinaryFile::deleteRecordFromFile(streampos position) {
     bool flag = false;
     Discipline discipline;
     while (file.read(reinterpret_cast<char*>(&discipline), sizeof(Discipline))) {
-
-        if (file.tellp() != position) {
+        cout << file.tellg() << endl;
+        if (file.tellg() != position) {
             tempFile.write(reinterpret_cast<const char*>(&discipline), sizeof(Discipline));
         }
         else {
             flag = true;
+            discipline.discipline_id = -1;
+            tempFile.write(reinterpret_cast<const char*>(&discipline), sizeof(Discipline));
             cout << "Discipline has been deleted from file." << endl;
         }
 
@@ -87,4 +95,19 @@ void BinaryFile::printRecordsFromFile() {
     }
 
     file.close();
+}
+
+
+void BinaryFile::createRecord(Discipline* discipline, int num)
+{
+    int random_id = num % 15000;
+    int random_specification_id = random_id % 30 + 1;
+    char name[64];
+    int random_term = random_id % 8 + 1;
+    strcpy_s(name, names[random_id % 4]);
+
+    discipline->discipline_id = random_id;
+    discipline->specification_id = random_specification_id;
+    strcpy_s(discipline->name, name);
+    discipline->term = random_term;
 }

@@ -4,17 +4,18 @@
 #include <random>
 #include <ctime>
 #include <fstream>
+#include "BinaryFile.h"
 using namespace std;
 
 class Node {
 public:
-    char value;
-    ofstream position;
+    Discipline* discipline;
+    streampos position;
     Node *parent;
     Node *left;
     Node *right;
 
-    Node(Node* parent, char value);
+    Node(Node* parent, Discipline* discipline, streampos position);
 
     ~Node();
 };
@@ -23,16 +24,15 @@ class BST
 {
 public:
     Node* root;
+    BinaryFile* file;
 
     BST();
-    void insert(char value);
+    ~BST();
+    void insert(int value, Node* node);
     void print(Node* node, bool isRight, string prefix);
-    void print_tree();
-    Node* find(char value);
-    void get_distance(char value);
-    void which_is_higher(char vaue1, char value2);
-    int recur_distance(Node* node, long long counter);
-    void delete_tree(char value);
+    void print_simple(Node* node, bool isRight, string prefix);
+    Node* find(int value, Node* node);
+    void delete_node(int value);
     void generate_tree(long long num);
 };
 
