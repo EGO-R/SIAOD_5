@@ -1,4 +1,5 @@
 #include "BST.h"
+#include "HashTable.h"
 
 
 void workWithBST() {
@@ -67,15 +68,17 @@ void workWithBST() {
 void workWithTable() {
     int action = -1;
     int value;
-    BST tree;
+
+    long long size;
+    cout << "Size of table: ";
+    HashTable table(size);
 
     while (action != 7) {
         cout << endl << "-------------------" << endl;
-        cout << "1. Isert node" << endl
-             << "2. Print tree" << endl
-             << "3. Print simple" << endl
-             << "4. Delete tree" << endl
-             << "5. Generate tree" << endl
+        cout << "1. Insert record" << endl
+             << "2. Print table" << endl
+             << "4. Delete record" << endl
+             << "5. Generate table" << endl
              << "6. Print file" << endl
              << "7. Exit" << endl
              << endl << "Choose option: ";
