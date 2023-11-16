@@ -20,6 +20,14 @@ HashTable::HashTable(long long size)
     }
 }
 
+HashTable::~HashTable() {
+    delete[] table;
+    delete[] isOccupied;
+    delete[] positions;
+    ofstream file(this->file->filename, ios::out | ios::trunc);
+    file.close();
+}
+
 // Вставка записи
 void HashTable::insertRecord(Discipline* discipline)
 {
@@ -78,10 +86,10 @@ void HashTable::insertRecord(Discipline* discipline)
 
 
 // Генерация записей
-void HashTable::generateTable(long num)
+void HashTable::generateTable(long long num)
 {
     srand(time(NULL));
-    for (long i = 0; i < num; i++)
+    for (long long i = 0; i < num; i++)
     {
         Discipline* discipline = new Discipline();
         file->createRecord(discipline, rand());
@@ -101,9 +109,8 @@ void HashTable::deleteRecord(int discipline_id)
         if (table[position].discipline_id == discipline_id)
         {
 
-            Discipline deletedRecord;
             file->deleteRecordFromFile(positions[position]);
-            table[position] = deletedRecord;
+            table[position].discipline_id = -1;
 
             deleted++;
             cout << "Discipline with id: " << discipline_id << " has been deleted from table." << endl;

@@ -4,15 +4,15 @@
 char names[][64] = {"Матлог", "Информатика", "История", "Философия"};
 
 streampos BinaryFile::addRecordToFile(Discipline* discipline) {
-    std::fstream fs(filename, std::ios::binary | std::ios::app | std::ios::ate);
+    fstream fs(filename, ios::binary | ios::app | ios::ate);
 
     if (!fs.is_open()) {
-        throw std::runtime_error("Failed to open file");
+        cout << "Failed to open file" <<endl;
     }
 
     fs.write(reinterpret_cast<const char*>(discipline), sizeof(Discipline));
 
-    std::streampos currentPos = fs.tellp();
+    streampos currentPos = fs.tellp();
 
     fs.close();
 
@@ -42,7 +42,6 @@ void BinaryFile::deleteRecordFromFile(streampos position) {
     bool flag = false;
     Discipline discipline;
     while (file.read(reinterpret_cast<char*>(&discipline), sizeof(Discipline))) {
-        cout << file.tellg() << endl;
         if (file.tellg() != position) {
             tempFile.write(reinterpret_cast<const char*>(&discipline), sizeof(Discipline));
         }

@@ -14,13 +14,14 @@ public:
     BinaryFile* file;
 
     HashTable(long long size);
+    ~HashTable();
     void insertRecord(Discipline* discipline);
     void deleteRecord(int discipline_id);
     void findRecord(int discipline_id);
     void printHashTable();
     long hashFunction(int key);
     long hashSecondFunction(int key);
-    void generateTable(long num);
+    void generateTable(long long num);
 };
 
 

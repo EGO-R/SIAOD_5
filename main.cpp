@@ -71,16 +71,17 @@ void workWithTable() {
 
     long long size;
     cout << "Size of table: ";
+    cin >> size;
     HashTable table(size);
 
-    while (action != 7) {
+    while (action != 6) {
         cout << endl << "-------------------" << endl;
         cout << "1. Insert record" << endl
              << "2. Print table" << endl
-             << "4. Delete record" << endl
-             << "5. Generate table" << endl
-             << "6. Print file" << endl
-             << "7. Exit" << endl
+             << "3. Delete record" << endl
+             << "4. Generate table" << endl
+             << "5. Print file" << endl
+             << "6. Exit" << endl
              << endl << "Choose option: ";
         cin >> action;
         cout << endl;
@@ -91,36 +92,33 @@ void workWithTable() {
             case 1:
                 cout << "Value: ";
                 cin >> value;
-                tree.insert(value, tree.root);
+                Discipline discipline;
+                table.file->createRecord(&discipline, value);
+                table.insertRecord(&discipline);
                 break;
 
             case 2:
-                tree.print(tree.root, false, "");
+                table.printHashTable();
                 break;
 
             case 3:
-                tree.print_simple(tree.root, false, "");
+                cout << "Value: ";
+                cin >> value;
+                table.deleteRecord(value);
                 break;
 
             case 4:
+                long long genValue;
                 cout << "Value: ";
-                cin >> value;
-                tree.delete_node(value);
+                cin >> genValue;
+                table.generateTable(genValue);
                 break;
 
             case 5:
-                long long num;
-
-                cout << "Amount: ";
-                cin >> num;
-                cout << num << endl;
-                tree.generate_tree(num);
+                table.file->printRecordsFromFile();
                 break;
+
             case 6:
-                tree.file->printRecordsFromFile();
-                break;
-
-            case 7:
                 return;
 
             default:
@@ -131,8 +129,7 @@ void workWithTable() {
 }
 
 
-int main()
-{
+int main() {
     system("chcp 65001");
 
     int action = -1;
@@ -143,7 +140,6 @@ int main()
         cout << "1. Binary Search Tree" << endl
              << "2. Empty" << endl
              << "3. Hash table" << endl
-             << "4. No work" << endl
              << endl << "Choose option: ";
         cin >> action;
         cout << endl;
@@ -158,7 +154,8 @@ int main()
                 break;
         }
 
+
+
+    }
     return 0;
-
-
 }

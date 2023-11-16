@@ -10,4 +10,6 @@ add_executable(SIAOD_5 main.cpp
         BinaryFile.h
         HashTable.cpp
         HashTable.h
+        SplayTree.cpp
+        SplayTree.h
 )
