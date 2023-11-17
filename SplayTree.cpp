@@ -170,3 +170,74 @@ void SplayTree::generate_tree(long long num) {
 
 }
 
+void SplayTree::right_rotate(Node *child, Node *parent) {
+    Node* parent_parent = parent->parent;
+
+    parent->parent = child;
+    parent->left = child->right;
+
+    if (child->right)
+        child->right->parent = parent;
+
+    child->parent = parent_parent;
+    child->right = parent;
+
+    if (parent_parent && parent == parent_parent->left)
+        parent_parent->left = child;
+
+    else if (parent_parent)
+        parent_parent->right = child;
+}
+
+void SplayTree::left_rotate(Node *child, Node *parent) {
+    Node* parent_parent = parent->parent;
+
+    parent->parent = child;
+    parent->right = child->left;
+
+    if (child->left)
+        child->left->parent = parent;
+
+    child->parent = parent_parent;
+    child->left = parent;
+
+    if (parent_parent && parent == parent_parent->left)
+        parent_parent->left = child;
+
+    else if (parent_parent)
+        parent_parent->right = child;
+}
+
+void SplayTree::zig(Node *node, Node *parent) {
+    if (node == parent->left) {
+        right_rotate(node, parent);
+    }
+
+    else {
+        left_rotate(node, parent);
+    }
+}
+
+void SplayTree::zig_zig(Node *node, Node *parent, Node* parent_parent) {
+    if (node == parent->left) {
+        right_rotate(parent, parent_parent);
+        right_rotate(node, parent);
+    }
+
+    else {
+        left_rotate(parent, parent_parent);
+       left_rotate(node, parent);
+    }
+}
+
+void SplayTree::zig_zag(Node *node, Node *parent, Node *parent_parent) {
+    if (parent == parent_parent->left) {
+        left_rotate(node, parent);
+        right_rotate(node, parent_parent);
+    }
+
+    else {
+        right_rotate(node, parent);
+        left_rotate(node, parent_parent);
+    }
+}

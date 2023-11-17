@@ -27,6 +27,11 @@ class SplayTree {
     Node* find(int value, Node* node);
     void delete_node(int value);
     void generate_tree(long long num);
+    void right_rotate(Node* child, Node* parent);
+    void left_rotate(Node* child, Node* parent);
+    void zig(Node* node, Node* parent);
+    void zig_zig(Node* node, Node* parent, Node* parent_parent);
+    void zig_zag(Node* node, Node* parent, Node* parent_parent);
 };
 
 
