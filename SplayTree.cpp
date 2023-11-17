@@ -170,6 +170,28 @@ void SplayTree::generate_tree(long long num) {
 
 }
 
+void SplayTree::rebuild_tree(Node *node) {
+    while (root != node) {
+        Node* parent = node->parent;
+        Node* parent_parent = nullptr;
+        if (parent)
+            parent_parent = parent->parent;
+
+        if (parent_parent) {
+            if (parent == parent_parent->left && node == parent->left ||
+            parent == parent_parent->right && node == parent->right)
+                zig_zig(node, parent, parent_parent);
+            else
+                zig_zag(node, parent, parent_parent);
+        }
+
+        else if (parent) {
+            zig(node, parent);
+            root = node;
+        }
+    }
+}
+
 void SplayTree::right_rotate(Node *child, Node *parent) {
     Node* parent_parent = parent->parent;
 
