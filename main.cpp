@@ -1,5 +1,6 @@
 #include "BST.h"
 #include "HashTable.h"
+#include "SplayTree.h"
 
 
 void workWithBST() {
@@ -56,6 +57,82 @@ void workWithBST() {
                 break;
 
             case 7:
+                return;
+
+            default:
+                cout << "Wrong option!" << endl;
+        }
+
+    }
+}
+
+void workWithSplay() {
+    int action = -1;
+    int value;
+    SplayTree tree;
+    Node* x;
+
+    while (action != 7) {
+        cout << endl << "-------------------" << endl;
+//        cout << "1. Insert node" << endl
+//             << "2. Print tree" << endl
+//             << "3. Print simple" << endl
+//             << "4. Delete tree" << endl
+//             << "5. Generate tree" << endl
+//             << "6. Print file" << endl
+//             << "7. Exit" << endl
+//             << endl << "Choose option: ";
+        cout << "1. Insert node" << endl
+        << "2. Print tree" << endl
+        << "3. Rotate right" << endl
+        << "4. Rotate left" << endl
+        << "5. Splay" << endl
+        << "6. Exit" << endl;
+        cin >> action;
+        cout << endl;
+
+
+        switch (action)
+        {
+            case 1:
+                cout << "Value: ";
+                cin >> value;
+                tree.insert(value, tree.root);
+                break;
+
+
+            case 2:
+                tree.print_simple(tree.root, false, "");
+                break;
+
+            case 3:
+                cout << "Value: ";
+                cin >> value;
+                x = tree.find(value, tree.root);
+                if (x && x->parent)
+                    if (x->parent == tree.root)
+                        tree.root = x;
+                    tree.right_rotate(x, x->parent);
+                break;
+
+            case 4:
+                cout << "Value: ";
+                cin >> value;
+                x = tree.find(value, tree.root);
+                if (x && x->parent)
+                    if (x->parent == tree.root)
+                        tree.root = x;
+                    tree.left_rotate(x, x->parent);
+                break;
+
+            case 5:
+                cout << "Value: ";
+                cin >> value;
+                x = tree.find(value, tree.root);
+                tree.splay(x);
+                break;
+
+            case 6:
                 return;
 
             default:
@@ -138,7 +215,7 @@ int main() {
     while (action != 7) {
         cout << endl << endl << "Working with:" << endl;
         cout << "1. Binary Search Tree" << endl
-             << "2. Empty" << endl
+             << "2. Splay tree" << endl
              << "3. Hash table" << endl
              << endl << "Choose option: ";
         cin >> action;
@@ -147,6 +224,10 @@ int main() {
         switch (action) {
             case 1:
                 workWithBST();
+                break;
+
+            case 2:
+                workWithSplay();
                 break;
 
             case 3:

@@ -2,11 +2,7 @@
 
 
 
-Node::Node(Node* parent, Discipline* discipline, streampos position) : parent(parent), discipline(discipline), position(position), left(nullptr), right(nullptr) {};
 
-Node::~Node() {
-    delete(discipline);
-}
 
 SplayTree::SplayTree() : root(nullptr) {
     file = new BinaryFile("SplayTreebinfile.bin");
@@ -170,7 +166,7 @@ void SplayTree::generate_tree(long long num) {
 
 }
 
-void SplayTree::rebuild_tree(Node *node) {
+void SplayTree::splay(Node *node) {
     while (root != node) {
         Node* parent = node->parent;
         Node* parent_parent = nullptr;

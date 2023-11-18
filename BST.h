@@ -7,18 +7,7 @@
 #include "BinaryFile.h"
 using namespace std;
 
-class Node {
-public:
-    Discipline* discipline;
-    streampos position;
-    Node *parent;
-    Node *left;
-    Node *right;
 
-    Node(Node* parent, Discipline* discipline, streampos position);
-
-    ~Node();
-};
 
 class BST
 {

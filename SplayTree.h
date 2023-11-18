@@ -2,20 +2,10 @@
 #define SIAOD_5_SPLAYTREE_H
 #include "BinaryFile.h"
 
-class Node {
-public:
-    Discipline* discipline;
-    streampos position;
-    Node *parent;
-    Node *left;
-    Node *right;
 
-    Node(Node* parent, Discipline* discipline, streampos position);
-
-    ~Node();
-};
 
 class SplayTree {
+public:
     Node* root;
     BinaryFile* file;
 
@@ -27,7 +17,7 @@ class SplayTree {
     Node* find(int value, Node* node);
     void delete_node(int value);
     void generate_tree(long long num);
-    void rebuild_tree(Node* node);
+    void splay(Node* node);
     void right_rotate(Node* child, Node* parent);
     void left_rotate(Node* child, Node* parent);
     void zig(Node* node, Node* parent);

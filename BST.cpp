@@ -2,11 +2,7 @@
 
 
 
-Node::Node(Node* parent, Discipline* discipline, streampos position) : parent(parent), discipline(discipline), position(position), left(nullptr), right(nullptr) {};
 
-Node::~Node() {
-    delete(discipline);
-}
 
 BST::BST() : root(nullptr) {
     file = new BinaryFile("BSTbinfile.bin");
