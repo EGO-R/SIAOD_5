@@ -24,8 +24,6 @@ HashTable::~HashTable() {
     delete[] table;
     delete[] isOccupied;
     delete[] positions;
-    ofstream file(this->file->filename, ios::out | ios::trunc);
-    file.close();
 }
 
 // Вставка записи

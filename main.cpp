@@ -84,9 +84,9 @@ void workWithSplay() {
 //             << endl << "Choose option: ";
         cout << "1. Insert node" << endl
         << "2. Print tree" << endl
-        << "3. Rotate right" << endl
-        << "4. Rotate left" << endl
-        << "5. Splay" << endl
+        << "3. Find" << endl
+        << "4. Delete" << endl
+        << "5. Generate tree" << endl
         << "6. Exit" << endl;
         cin >> action;
         cout << endl;
@@ -97,7 +97,7 @@ void workWithSplay() {
             case 1:
                 cout << "Value: ";
                 cin >> value;
-                tree.insert(value, tree.root);
+                tree.insert(value);
                 break;
 
 
@@ -109,27 +109,30 @@ void workWithSplay() {
                 cout << "Value: ";
                 cin >> value;
                 x = tree.find(value, tree.root);
-                if (x && x->parent)
-                    if (x->parent == tree.root)
-                        tree.root = x;
-                    tree.right_rotate(x, x->parent);
+                if (x)
+                    cout << " [Discipline id: " << x->discipline->discipline_id
+                        << "; Specification id: " << x->discipline->specification_id
+                        << "; Discipline name: " << x->discipline->name
+                        << "; Term number: " << x->discipline->term
+                        << "]\n";
+                else
+                    cout << "Not found!" << endl;
                 break;
 
             case 4:
                 cout << "Value: ";
                 cin >> value;
-                x = tree.find(value, tree.root);
-                if (x && x->parent)
-                    if (x->parent == tree.root)
-                        tree.root = x;
-                    tree.left_rotate(x, x->parent);
+                tree.delete_node(value);
                 break;
 
+
             case 5:
-                cout << "Value: ";
-                cin >> value;
-                x = tree.find(value, tree.root);
-                tree.splay(x);
+                long long num;
+
+                cout << "Amount: ";
+                cin >> num;
+                cout << num << endl;
+                tree.generate_tree(num);
                 break;
 
             case 6:

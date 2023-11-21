@@ -9,9 +9,11 @@ public:
     Node* root;
     BinaryFile* file;
 
+    long long turns = 0;
+    long long elem_amount = 0;
+
     SplayTree();
-    ~SplayTree();
-    void insert(int value, Node* node);
+    void insert(int value);
     void print(Node* node, bool isRight, string prefix);
     void print_simple(Node* node, bool isRight, string prefix);
     Node* find(int value, Node* node);
@@ -23,6 +25,9 @@ public:
     void zig(Node* node, Node* parent);
     void zig_zig(Node* node, Node* parent, Node* parent_parent);
     void zig_zag(Node* node, Node* parent, Node* parent_parent);
+    void merge(Node* left, Node* right);
+    void split(int value, Node* nodes [2]);
+    Node* find_closest(int value, Node* node);
 };
 
 

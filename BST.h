@@ -16,7 +16,6 @@ public:
     BinaryFile* file;
 
     BST();
-    ~BST();
     void insert(int value, Node* node);
     void print(Node* node, bool isRight, string prefix);
     void print_simple(Node* node, bool isRight, string prefix);

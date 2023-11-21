@@ -8,11 +8,6 @@ BST::BST() : root(nullptr) {
     file = new BinaryFile("BSTbinfile.bin");
 }
 
-BST::~BST() {
-    ofstream file(this->file->filename, ios::out | ios::trunc);
-    file.close();
-}
-
 
 void BST::insert(int value, Node* node) {
     Discipline* discipline = new Discipline();

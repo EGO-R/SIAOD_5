@@ -35,7 +35,7 @@ class BinaryFile {
 public:
     string filename;
 
-    BinaryFile(string filename) { this->filename = filename;};
+    BinaryFile(string filename);
     streampos addRecordToFile(Discipline* discipline);
     void deleteRecordFromFile(streampos position);
     void printRecordsFromFile();

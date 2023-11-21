@@ -9,6 +9,12 @@ Node::~Node() {
 
 char names[][64] = {"Матлог", "Информатика", "История", "Философия"};
 
+BinaryFile::BinaryFile(std::string filename) {
+    this->filename = filename;
+    ofstream file(filename, ios::out | ios::trunc);
+    file.close();
+}
+
 streampos BinaryFile::addRecordToFile(Discipline* discipline) {
     fstream fs(filename, ios::binary | ios::app | ios::ate);
 
@@ -31,7 +37,6 @@ streampos BinaryFile::addRecordToFile(Discipline* discipline) {
 
 
 void BinaryFile::deleteRecordFromFile(streampos position) {
-    cout << position << endl << endl;
     fstream file(filename, ios::binary | ios::in | ios::out);
     if (!file) {
         cout << "Error file opening!" << endl;

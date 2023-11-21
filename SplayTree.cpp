@@ -8,44 +8,6 @@ SplayTree::SplayTree() : root(nullptr) {
     file = new BinaryFile("SplayTreebinfile.bin");
 }
 
-SplayTree::~SplayTree() {
-    ofstream file(this->file->filename, ios::out | ios::trunc);
-    file.close();
-}
-
-
-void SplayTree::insert(int value, Node* node) {
-    Discipline* discipline = new Discipline();
-    file->createRecord(discipline, value);
-
-    if (!root) {
-        root = new Node(nullptr, discipline, file->addRecordToFile(discipline));
-        cout << "Insert in SplayTree succes" << endl;
-        return;
-    }
-
-    if (discipline->discipline_id < node->discipline->discipline_id) {
-        if (node->left)
-            insert(value, node->left);
-
-        else {
-            Node* new_node = new Node(node, discipline, file->addRecordToFile(discipline));
-            node->left = new_node;
-            cout << "Insert in SplayTree succes" << endl;
-        }
-    }
-
-    else {
-        if (node->right)
-            insert(value, node->right);
-
-        else {
-            Node* new_node = new Node(node, discipline, file->addRecordToFile(discipline));
-            node->right = new_node;
-            cout << "Insert in SplayTree succes" << endl;
-        }
-    }
-}
 
 void SplayTree::print(Node* node, bool isRight, string prefix)
 {
@@ -91,6 +53,7 @@ Node* SplayTree::find(int value, Node* node)
         return nullptr;
 
     if (value == node->discipline->discipline_id) {
+        splay(node);
         return node;
     }
 
@@ -113,61 +76,23 @@ Node* SplayTree::find(int value, Node* node)
 }
 
 
-
-void SplayTree::delete_node(int value)
-{
-    Node* node = find(value, root);
-
-    if (node) {
-        if (node->right) {
-            Node* temp_node = node->right;
-            while (temp_node->left)
-                temp_node = temp_node->left;
-
-            temp_node->parent->left == temp_node ? temp_node->parent->left = nullptr : temp_node->parent->right = nullptr;
-            if (node->parent)
-                node->parent->left == node ? node->parent->left = temp_node : node->parent->right = temp_node;
-
-            temp_node->parent = node->parent;
-            temp_node->left = node->left;
-            temp_node->right = node->right;
-
-            if (node == root)
-                root = temp_node;
-        }
-
-        else if (node->left) {
-            Node* temp_node = node->left;
-            if (node->parent)
-                node->parent->left == node ? node->parent->left = temp_node : node->parent->right = temp_node;
-
-            if (node == root)
-                root = temp_node;
-        }
-
-        else if (node == root)
-            root = nullptr;
-        file->deleteRecordFromFile(node->position);
-        delete(node);
-        cout << "Node deleted!" << endl;
-
-    }
-
-    else
-        cout << "Node not found!" << endl;
-}
-
 void SplayTree::generate_tree(long long num) {
-    srand(time(0));
+    turns = 0;
+    elem_amount = num;
+    srand(time(NULL));
 
     for (int i = 0; i < num; i++) {
-        insert(rand(), root);
+        cout << "Number: " << i << endl;
+        insert(rand() % 1000);
     }
-
+    cout << "Среднее количество поворотов: " << turns  << " " << elem_amount << endl;
 }
 
 void SplayTree::splay(Node *node) {
-    while (root != node) {
+    if (!node)
+        return;
+    while (node->parent) {
+
         Node* parent = node->parent;
         Node* parent_parent = nullptr;
         if (parent)
@@ -179,6 +104,9 @@ void SplayTree::splay(Node *node) {
                 zig_zig(node, parent, parent_parent);
             else
                 zig_zag(node, parent, parent_parent);
+
+            if (parent_parent == root)
+                root = node;
         }
 
         else if (parent) {
@@ -189,6 +117,7 @@ void SplayTree::splay(Node *node) {
 }
 
 void SplayTree::right_rotate(Node *child, Node *parent) {
+    turns++;
     Node* parent_parent = parent->parent;
 
     parent->parent = child;
@@ -208,6 +137,7 @@ void SplayTree::right_rotate(Node *child, Node *parent) {
 }
 
 void SplayTree::left_rotate(Node *child, Node *parent) {
+    turns++;
     Node* parent_parent = parent->parent;
 
     parent->parent = child;
@@ -227,6 +157,7 @@ void SplayTree::left_rotate(Node *child, Node *parent) {
 }
 
 void SplayTree::zig(Node *node, Node *parent) {
+//    cout << "zig" << endl;
     if (node == parent->left) {
         right_rotate(node, parent);
     }
@@ -237,6 +168,7 @@ void SplayTree::zig(Node *node, Node *parent) {
 }
 
 void SplayTree::zig_zig(Node *node, Node *parent, Node* parent_parent) {
+//    cout << "zig-zig" << endl;
     if (node == parent->left) {
         right_rotate(parent, parent_parent);
         right_rotate(node, parent);
@@ -244,11 +176,13 @@ void SplayTree::zig_zig(Node *node, Node *parent, Node* parent_parent) {
 
     else {
         left_rotate(parent, parent_parent);
-       left_rotate(node, parent);
+        left_rotate(node, parent);
+
     }
 }
 
 void SplayTree::zig_zag(Node *node, Node *parent, Node *parent_parent) {
+//    cout << "zig-zag" << endl;
     if (parent == parent_parent->left) {
         left_rotate(node, parent);
         right_rotate(node, parent_parent);
@@ -258,4 +192,133 @@ void SplayTree::zig_zag(Node *node, Node *parent, Node *parent_parent) {
         right_rotate(node, parent);
         left_rotate(node, parent_parent);
     }
+}
+
+
+Node* SplayTree::find_closest(int value, Node *node) {
+    if (!node)
+        return nullptr;
+
+    if (value == node->discipline->discipline_id) {
+        splay(node);
+        return node;
+    }
+
+    if (value < node->discipline->discipline_id) {
+        if (node->left)
+            return find_closest(value, node->left);
+
+        else {
+            splay(node);
+            return node;
+        }
+    }
+
+    else {
+        if (node->right)
+            return find_closest(value, node->right);
+
+        else {
+            splay(node);
+            return node;
+        }
+    }
+}
+
+void SplayTree::split(int value, Node* nodes [2]) {
+    Node* node = find_closest(value, root);
+    if (!node){
+        nodes[0] = nullptr;
+        nodes[1] = nullptr;
+        return;
+    }
+
+    if (node->discipline->discipline_id == value) {
+        if (node->left)
+            node->left->parent = nullptr;
+        if (node->right)
+            node->right->parent = nullptr;
+        nodes[0] = node->left;
+        nodes[1] = node->right;
+        delete_node(node->discipline->discipline_id);
+        return;
+    }
+
+    else if (node->discipline->discipline_id < value) {
+        Node* right = node->right;
+        node->right = nullptr;
+        if (right)
+            right->parent = nullptr;
+        nodes[0] = node;
+        nodes[1] = right;
+        return;
+    }
+
+    else if (node->discipline->discipline_id > value) {
+        Node* left = node->left;
+        node->left = nullptr;
+        if (left)
+            left->parent = nullptr;
+        nodes[0] = left;
+        nodes[1] = node;
+        return;
+    }
+
+}
+
+void SplayTree::insert(int value) {
+    cout << value << endl;
+    Node* nodes [2];
+    split(value, nodes);
+    Node* left = nodes[0];
+    Node* right = nodes[1];
+    Discipline* discipline = new Discipline();
+    file->createRecord(discipline, value);
+    root = new Node(nullptr, discipline, file->addRecordToFile(discipline));
+    root->left = left;
+    root->right = right;
+    if (left)
+        left->parent = root;
+    if (right)
+        right->parent = root;
+}
+
+void SplayTree::merge(Node *left, Node *right) {
+    Node* max_node = left;
+
+    if (left) {
+        while (max_node->right)
+            max_node = max_node->right;
+
+        splay(max_node);
+        root = max_node;
+
+        max_node->right = right;
+        if (right)
+            right->parent = max_node;
+    }
+
+    else if (right)
+        root = right;
+    else
+        root = nullptr;
+}
+
+void SplayTree::delete_node(int value) {
+    Node* node = find(value, root);
+
+    if (!node) {
+        cout << "Node not found!" << endl;
+        return;
+    }
+
+    if (node->left)
+        node->left->parent = nullptr;
+
+    if (node->right)
+        node->right->parent = nullptr;
+
+    file->deleteRecordFromFile(node->position);
+    merge(node->left, node->right);
+    delete(node);
 }
