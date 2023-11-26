@@ -78,7 +78,7 @@ void HashTable::insertRecord(Discipline* discipline)
     isOccupied[position] = true;
     positions[position] = file->addRecordToFile(discipline);
     filled++;
-    cout << "Write added to table" << endl;
+//    cout << "Write added to table" << endl;
 }
 
 
@@ -90,7 +90,7 @@ void HashTable::generateTable(long long num)
     for (long long i = 0; i < num; i++)
     {
         Discipline* discipline = new Discipline();
-        file->createRecord(discipline, rand());
+        file->createRecord(discipline, rand() % 1000000);
         insertRecord(discipline);
     }
 }

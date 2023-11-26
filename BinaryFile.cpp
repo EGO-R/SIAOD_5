@@ -60,7 +60,7 @@ void BinaryFile::deleteRecordFromFile(streampos position) {
             flag = true;
             discipline.discipline_id = -1;
             tempFile.write(reinterpret_cast<const char*>(&discipline), sizeof(Discipline));
-            cout << "Discipline has been deleted from file." << endl;
+//            cout << "Discipline has been deleted from file." << endl;
         }
 
     }
@@ -110,7 +110,7 @@ void BinaryFile::printRecordsFromFile() {
 
 void BinaryFile::createRecord(Discipline* discipline, int num)
 {
-    int random_id = num % 15000;
+    int random_id = num % 1000000;
     int random_specification_id = random_id % 30 + 1;
     char name[64];
     int random_term = random_id % 8 + 1;

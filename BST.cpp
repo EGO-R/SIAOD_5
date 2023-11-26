@@ -15,7 +15,7 @@ void BST::insert(int value, Node* node) {
 
     if (!root) {
         root = new Node(nullptr, discipline, file->addRecordToFile(discipline));
-        cout << "Insert in BST succes" << endl;
+//        cout << "Insert in BST succes" << endl;
         return;
     }
 
@@ -26,7 +26,7 @@ void BST::insert(int value, Node* node) {
         else {
             Node* new_node = new Node(node, discipline, file->addRecordToFile(discipline));
             node->left = new_node;
-            cout << "Insert in BST succes" << endl;
+//            cout << "Insert in BST succes" << endl;
         }
     }
 
@@ -37,7 +37,7 @@ void BST::insert(int value, Node* node) {
         else {
             Node* new_node = new Node(node, discipline, file->addRecordToFile(discipline));
             node->right = new_node;
-            cout << "Insert in BST succes" << endl;
+//            cout << "Insert in BST succes" << endl;
         }
     }
 }
@@ -156,7 +156,7 @@ void BST::generate_tree(long long num) {
     srand(time(0));
 
     for (int i = 0; i < num; i++) {
-        insert(rand(), root);
+        insert(rand() % 1000000, root);
     }
 
 }

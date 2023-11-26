@@ -8,15 +8,21 @@ void workWithBST() {
     int value;
     BST tree;
 
+    auto start = chrono::steady_clock::now();
+    auto end = chrono::steady_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+    Node* x;
+
     while (action != 7) {
         cout << endl << "-------------------" << endl;
         cout << "1. Insert node" << endl
              << "2. Print tree" << endl
-             << "3. Print simple" << endl
-             << "4. Delete tree" << endl
-             << "5. Generate tree" << endl
-             << "6. Print file" << endl
-             << "7. Exit" << endl
+             << "3. Find" << endl
+             << "4. Print simple" << endl
+             << "5. Delete tree" << endl
+             << "6. Generate tree" << endl
+             << "7. Print file" << endl
+             << "8. Exit" << endl
              << endl << "Choose option: ";
         cin >> action;
         cout << endl;
@@ -35,28 +41,48 @@ void workWithBST() {
                 break;
 
             case 3:
-                tree.print_simple(tree.root, false, "");
+                cout << "Value: ";
+                cin >> value;
+
+                start = chrono::steady_clock::now();
+                x = tree.find(value, tree.root);
+                if (x)
+                    cout << "Found" << endl;
+                else
+                    cout << "Not found" << endl;
+
+                end = chrono::steady_clock::now();
+                duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+                cout << "Reading record time: " << duration << " ms" << endl;
                 break;
 
             case 4:
+                tree.print_simple(tree.root, false, "");
+                break;
+
+            case 5:
                 cout << "Value: ";
                 cin >> value;
                 tree.delete_node(value);
                 break;
 
-            case 5:
+            case 6:
                 long long num;
 
                 cout << "Amount: ";
                 cin >> num;
                 cout << num << endl;
+
+
                 tree.generate_tree(num);
+
                 break;
-            case 6:
+            case 7:
                 tree.file->printRecordsFromFile();
                 break;
 
-            case 7:
+            case 8:
                 return;
 
             default:
@@ -72,22 +98,19 @@ void workWithSplay() {
     SplayTree tree;
     Node* x;
 
+    auto start = chrono::steady_clock::now();
+    auto end = chrono::steady_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+
     while (action != 7) {
         cout << endl << "-------------------" << endl;
-//        cout << "1. Insert node" << endl
-//             << "2. Print tree" << endl
-//             << "3. Print simple" << endl
-//             << "4. Delete tree" << endl
-//             << "5. Generate tree" << endl
-//             << "6. Print file" << endl
-//             << "7. Exit" << endl
-//             << endl << "Choose option: ";
         cout << "1. Insert node" << endl
         << "2. Print tree" << endl
         << "3. Find" << endl
         << "4. Delete" << endl
         << "5. Generate tree" << endl
-        << "6. Exit" << endl;
+        << "6. Print file" << endl
+        << "7. Exit" << endl;
         cin >> action;
         cout << endl;
 
@@ -108,7 +131,13 @@ void workWithSplay() {
             case 3:
                 cout << "Value: ";
                 cin >> value;
+
+                start = chrono::steady_clock::now();
                 x = tree.find(value, tree.root);
+                end = chrono::steady_clock::now();
+                duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+
                 if (x)
                     cout << " [Discipline id: " << x->discipline->discipline_id
                         << "; Specification id: " << x->discipline->specification_id
@@ -117,6 +146,8 @@ void workWithSplay() {
                         << "]\n";
                 else
                     cout << "Not found!" << endl;
+
+                cout << "Reading record time: " << duration << " ms" << endl;
                 break;
 
             case 4:
@@ -132,10 +163,15 @@ void workWithSplay() {
                 cout << "Amount: ";
                 cin >> num;
                 cout << num << endl;
+
                 tree.generate_tree(num);
                 break;
 
             case 6:
+                tree.file->printRecordsFromFile();
+                break;
+
+            case 7:
                 return;
 
             default:
@@ -153,15 +189,21 @@ void workWithTable() {
     cout << "Size of table: ";
     cin >> size;
     HashTable table(size);
+    Discipline* x;
+
+    auto start = chrono::steady_clock::now();
+    auto end = chrono::steady_clock::now();
+    auto duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
 
     while (action != 6) {
         cout << endl << "-------------------" << endl;
         cout << "1. Insert record" << endl
              << "2. Print table" << endl
-             << "3. Delete record" << endl
-             << "4. Generate table" << endl
-             << "5. Print file" << endl
-             << "6. Exit" << endl
+             << "3. Find" << endl
+             << "4. Delete record" << endl
+             << "5. Generate table" << endl
+             << "6. Print file" << endl
+             << "7. Exit" << endl
              << endl << "Choose option: ";
         cin >> action;
         cout << endl;
@@ -184,21 +226,34 @@ void workWithTable() {
             case 3:
                 cout << "Value: ";
                 cin >> value;
-                table.deleteRecord(value);
+
+                start = chrono::steady_clock::now();
+                table.findRecord(value);
+                end = chrono::steady_clock::now();
+                duration = chrono::duration_cast<chrono::microseconds>(end - start).count();
+
+                cout << "Reading record time: " << duration << " ms" << endl;
                 break;
 
             case 4:
-                long long genValue;
                 cout << "Value: ";
-                cin >> genValue;
-                table.generateTable(genValue);
+                cin >> value;
+                table.deleteRecord(value);
                 break;
 
             case 5:
-                table.file->printRecordsFromFile();
+                long long genValue;
+                cout << "Value: ";
+                cin >> genValue;
+
+                table.generateTable(genValue);
                 break;
 
             case 6:
+                table.file->printRecordsFromFile();
+                break;
+
+            case 7:
                 return;
 
             default:

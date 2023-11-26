@@ -39,7 +39,11 @@ void SplayTree::print_simple(Node* node, bool isRight, string prefix)
     if (node != nullptr) {
         cout << prefix;
         cout << (isRight ? "|--" : "|__");
-        cout << node->discipline->discipline_id << endl;
+        cout << node->discipline->discipline_id <<
+        " parent: "  + to_string(node->parent ? node->parent->discipline->discipline_id : -1) +
+        " left: " + to_string(node->left ? node->left->discipline->discipline_id : -1) +
+        " right: " + to_string(node->right ? node->right->discipline->discipline_id : -1) << endl;
+
         print_simple(node->right, true, prefix + ((node->parent && isRight && node->parent->left) ? "|  " : "   "));
         print_simple(node->left, false, prefix + ((node->parent && isRight && node->parent->left) ? "|  " : "   "));
     }
@@ -49,8 +53,10 @@ void SplayTree::print_simple(Node* node, bool isRight, string prefix)
 
 Node* SplayTree::find(int value, Node* node)
 {
-    if (!node)
+    if (!node) {
+        cout << "null" << endl;
         return nullptr;
+    }
 
     if (value == node->discipline->discipline_id) {
         splay(node);
@@ -82,16 +88,23 @@ void SplayTree::generate_tree(long long num) {
     srand(time(NULL));
 
     for (int i = 0; i < num; i++) {
-        cout << "Number: " << i << endl;
-        insert(rand() % 1000);
+        if (i % 10000 == 0)
+            cout << i << endl;
+//        cout << "Number: " << i << endl;
+//        print_simple(root, false, "");
+        insert(rand() % 1000000);
     }
-    cout << "Среднее количество поворотов: " << turns  << " " << elem_amount << endl;
+    cout << "Среднее количество поворотов: " << 1.0 * turns / elem_amount << endl;
 }
+
 
 void SplayTree::splay(Node *node) {
     if (!node)
         return;
+//    cout << "Splay: " << node->discipline->discipline_id << endl;
+
     while (node->parent) {
+//        print_simple(root, false, "");
 
         Node* parent = node->parent;
         Node* parent_parent = nullptr;
@@ -100,7 +113,7 @@ void SplayTree::splay(Node *node) {
 
         if (parent_parent) {
             if (parent == parent_parent->left && node == parent->left ||
-            parent == parent_parent->right && node == parent->right)
+                parent == parent_parent->right && node == parent->right)
                 zig_zig(node, parent, parent_parent);
             else
                 zig_zag(node, parent, parent_parent);
@@ -114,6 +127,7 @@ void SplayTree::splay(Node *node) {
             root = node;
         }
     }
+//    print_simple(root, false, "");
 }
 
 void SplayTree::right_rotate(Node *child, Node *parent) {
@@ -194,8 +208,18 @@ void SplayTree::zig_zag(Node *node, Node *parent, Node *parent_parent) {
     }
 }
 
+string ifElem(Node* node) {
+    if (!node)
+        return "-1";
+    return to_string(node->discipline->discipline_id) +
+            " parent: "  + to_string(node->parent ? node->parent->discipline->discipline_id : -1) +
+            " left: " + to_string(node->left ? node->left->discipline->discipline_id : -1) +
+            " right: " + to_string(node->right ? node->right->discipline->discipline_id : -1);
+}
 
 Node* SplayTree::find_closest(int value, Node *node) {
+//    cout << "Find closest: " << value << " Current: " << ifElem(node) << endl;
+
     if (!node)
         return nullptr;
 
@@ -226,6 +250,7 @@ Node* SplayTree::find_closest(int value, Node *node) {
 }
 
 void SplayTree::split(int value, Node* nodes [2]) {
+//    cout << "Split: " << value << endl;
     Node* node = find_closest(value, root);
     if (!node){
         nodes[0] = nullptr;
@@ -240,7 +265,7 @@ void SplayTree::split(int value, Node* nodes [2]) {
             node->right->parent = nullptr;
         nodes[0] = node->left;
         nodes[1] = node->right;
-        delete_node(node->discipline->discipline_id);
+        file->deleteRecordFromFile(node->position);
         return;
     }
 
@@ -267,7 +292,7 @@ void SplayTree::split(int value, Node* nodes [2]) {
 }
 
 void SplayTree::insert(int value) {
-    cout << value << endl;
+//    cout << "Insert: " << value << endl;
     Node* nodes [2];
     split(value, nodes);
     Node* left = nodes[0];
@@ -320,5 +345,6 @@ void SplayTree::delete_node(int value) {
 
     file->deleteRecordFromFile(node->position);
     merge(node->left, node->right);
+    cout << "Node deleted" << endl;
     delete(node);
 }
